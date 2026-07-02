@@ -95,6 +95,9 @@ jobs:
             EOF
             chmod 600 .env
 
-            docker compose -f docker-compose.prod.yml pull
+            # Only pull the app image here. The heavy OnlyOffice/MinIO images are
+            # pre-pulled once on the server; `up -d` reuses the local copies and only
+            # recreates the app container when its image changed.
+            docker compose -f docker-compose.prod.yml pull app
             docker compose -f docker-compose.prod.yml up -d
             docker image prune -f
