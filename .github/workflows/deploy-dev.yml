@@ -75,6 +75,8 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
+          # Pulling the large OnlyOffice image on first deploy can exceed the 10m default.
+          command_timeout: 30m
           envs: APP_IMAGE,GHCR_USER,GHCR_TOKEN,ONLYOFFICE_JWT_SECRET,ONLYOFFICE_DOCSERVER_URL,MINIO_ROOT_USER,MINIO_ROOT_PASSWORD
           script: |
             set -e
