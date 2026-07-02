@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>OnlyOffice · Documents</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; }
+        h1 { font-size: 1.4rem; }
+        .msg { padding: 8px 12px; border-radius: 6px; margin: 12px 0; }
+        .msg.ok { background: #e6f4ea; color: #1e7e34; }
+        .msg.err { background: #fdecea; color: #c0392b; }
+        ul { list-style: none; padding: 0; }
+        li { display: flex; justify-content: space-between; padding: 10px 12px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 8px; }
+        a.btn { text-decoration: none; background: #2b7de9; color: #fff; padding: 5px 12px; border-radius: 5px; font-size: .85rem; }
+        a.view { background: #6c757d; }
+        form.upload { margin: 20px 0; padding: 16px; border: 1px dashed #ccc; border-radius: 8px; }
+    </style>
+</head>
+<body>
+<h1>📄 Documents</h1>
+
+<div th:if="${message}" class="msg ok" th:text="${message}"></div>
+<div th:if="${error}" class="msg err" th:text="${error}"></div>
+
+<form class="upload" method="post" action="/upload" enctype="multipart/form-data">
+    <input type="file" name="file" required/>
+    <button type="submit">Upload</button>
+</form>
+
+<ul>
+    <li th:each="f : ${files}">
+        <span th:text="${f}">file.docx</span>
+        <span>
+            <a class="btn" th:href="@{/editor(fileName=${f}, edit=true)}">Edit</a>
+            <a class="btn view" th:href="@{/editor(fileName=${f}, edit=false)}">View</a>
+        </span>
+    </li>
+    <li th:if="${#lists.isEmpty(files)}">No documents yet. Upload one above.</li>
+</ul>
+</body>
+</html>

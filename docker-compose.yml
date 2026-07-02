@@ -1,0 +1,36 @@
+services:
+  onlyoffice:
+    image: onlyoffice/documentserver:8.2
+    container_name: onlyoffice-documentserver
+    ports:
+      - "8080:80"
+    environment:
+      # Enable JWT and use the SAME secret as onlyoffice.jwt-secret in application.yml
+      - JWT_ENABLED=true
+      - JWT_SECRET=my-super-secret-onlyoffice-key-change-me
+      - JWT_HEADER=Authorization
+      - JWT_IN_BODY=true
+    extra_hosts:
+      # Lets the container reach the Spring app on the host via host.docker.internal (Linux).
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+      - onlyoffice_logs:/var/log/onlyoffice
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console (http://localhost:9001)
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio_data:/data
+
+volumes:
+  onlyoffice_data:
+  onlyoffice_logs:
+  minio_data:

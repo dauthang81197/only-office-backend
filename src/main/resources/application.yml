@@ -1,0 +1,39 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: onlyoffice-spring
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+app:
+  # Public base URL of THIS Spring app, as reachable FROM the Document Server container.
+  # On Docker Desktop (Mac/Windows) the container reaches the host via host.docker.internal.
+  public-url: http://host.docker.internal:8081
+
+onlyoffice:
+  # URL the browser uses to load the Document Server API (api.js).
+  docserver-url: http://localhost:8080
+  # URL the Spring backend uses to call the Document Server (conversion, command service).
+  # Same as docserver-url when both run on the same host network.
+  docserver-inner-url: http://localhost:8080
+  # Shared secret. MUST match JWT_SECRET of the Document Server (see docker-compose.yml).
+  jwt-secret: my-super-secret-onlyoffice-key-change-me
+  jwt-header: Authorization
+
+storage:
+  s3:
+    endpoint: http://localhost:9000
+    region: us-east-1
+    bucket: documents
+    access-key: minioadmin
+    secret-key: minioadmin
+    # MinIO requires path-style access (bucket in path, not subdomain).
+    path-style-access: true
+
+logging:
+  level:
+    com.example.onlyoffice: DEBUG

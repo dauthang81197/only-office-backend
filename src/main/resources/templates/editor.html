@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${fileName}">Editor</title>
+    <style>
+        html, body { height: 100%; margin: 0; }
+        #placeholder { height: 100vh; }
+    </style>
+    <!-- Document Server API. th:src injects the configured docserver URL. -->
+    <script type="text/javascript" th:src="@{${docserverUrl} + '/web-apps/apps/api/documents/api.js'}"></script>
+</head>
+<body>
+<div id="placeholder"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var config = /*[[${configJson}]]*/ {};
+    if (typeof config === "string") {
+        config = JSON.parse(config);
+    }
+    var docEditor = new DocsAPI.DocEditor("placeholder", config);
+    /*]]>*/
+</script>
+</body>
+</html>
