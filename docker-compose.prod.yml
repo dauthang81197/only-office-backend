@@ -1,0 +1,65 @@
+# Runs on the Linux server. Values are read from a .env file the CI writes on deploy.
+services:
+  app:
+    image: ${APP_IMAGE}
+    container_name: onlyoffice-app
+    restart: unless-stopped
+    depends_on:
+      - minio
+      - onlyoffice
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      # Reachable by the Document Server container via service name.
+      - APP_PUBLIC_URL=http://app:8081
+      # Browser-facing address of the Document Server (public IP/domain of the server).
+      - ONLYOFFICE_DOCSERVER_URL=${ONLYOFFICE_DOCSERVER_URL}
+      - ONLYOFFICE_INNER_URL=http://onlyoffice
+      - ONLYOFFICE_JWT_SECRET=${ONLYOFFICE_JWT_SECRET}
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY=${MINIO_ROOT_USER}
+      - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+    networks:
+      - onlyoffice-net
+
+  onlyoffice:
+    image: onlyoffice/documentserver:8.2
+    container_name: onlyoffice-documentserver
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      - JWT_ENABLED=true
+      - JWT_SECRET=${ONLYOFFICE_JWT_SECRET}
+      - JWT_HEADER=Authorization
+      - JWT_IN_BODY=true
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+      - onlyoffice_logs:/var/log/onlyoffice
+    networks:
+      - onlyoffice-net
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio_data:/data
+    networks:
+      - onlyoffice-net
+
+networks:
+  onlyoffice-net:
+
+volumes:
+  onlyoffice_data:
+  onlyoffice_logs:
+  minio_data:
