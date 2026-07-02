@@ -46,8 +46,10 @@ services:
     restart: unless-stopped
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      # Host ports are configurable to avoid clashes; container ports stay 9000/9001,
+      # so the app still reaches MinIO at http://minio:9000 inside the network.
+      - "${MINIO_API_PORT:-9100}:9000"
+      - "${MINIO_CONSOLE_PORT:-9101}:9001"
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
