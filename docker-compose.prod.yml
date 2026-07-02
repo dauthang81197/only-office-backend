@@ -8,7 +8,7 @@ services:
       - minio
       - onlyoffice
     ports:
-      - "8081:8081"
+      - "${APP_PORT:-8081}:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       # Reachable by the Document Server container via service name.
@@ -28,7 +28,8 @@ services:
     container_name: onlyoffice-documentserver
     restart: unless-stopped
     ports:
-      - "8080:80"
+      # Must match the port in ONLYOFFICE_DOCSERVER_URL (browser-facing).
+      - "${ONLYOFFICE_PORT:-8880}:80"
     environment:
       - JWT_ENABLED=true
       - JWT_SECRET=${ONLYOFFICE_JWT_SECRET}

@@ -72,6 +72,8 @@ jobs:
           MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
           MINIO_API_PORT: ${{ secrets.MINIO_API_PORT || '9100' }}
           MINIO_CONSOLE_PORT: ${{ secrets.MINIO_CONSOLE_PORT || '9101' }}
+          ONLYOFFICE_PORT: ${{ secrets.ONLYOFFICE_PORT || '8880' }}
+          APP_PORT: ${{ secrets.APP_PORT || '8081' }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -79,7 +81,7 @@ jobs:
           port: ${{ secrets.SSH_PORT || 22 }}
           # Pulling the large OnlyOffice image on first deploy can exceed the 10m default.
           command_timeout: 30m
-          envs: APP_IMAGE,GHCR_USER,GHCR_TOKEN,ONLYOFFICE_JWT_SECRET,ONLYOFFICE_DOCSERVER_URL,MINIO_ROOT_USER,MINIO_ROOT_PASSWORD,MINIO_API_PORT,MINIO_CONSOLE_PORT
+          envs: APP_IMAGE,GHCR_USER,GHCR_TOKEN,ONLYOFFICE_JWT_SECRET,ONLYOFFICE_DOCSERVER_URL,MINIO_ROOT_USER,MINIO_ROOT_PASSWORD,MINIO_API_PORT,MINIO_CONSOLE_PORT,ONLYOFFICE_PORT,APP_PORT
           script: |
             set -e
             cd /opt/onlyoffice-app
@@ -96,6 +98,8 @@ jobs:
             MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD
             MINIO_API_PORT=$MINIO_API_PORT
             MINIO_CONSOLE_PORT=$MINIO_CONSOLE_PORT
+            ONLYOFFICE_PORT=$ONLYOFFICE_PORT
+            APP_PORT=$APP_PORT
             EOF
             chmod 600 .env
 
