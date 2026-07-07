@@ -1,0 +1,32 @@
+@if (open(); as o) {
+  <app-editor [fileName]="o.fileName" [edit]="o.edit" (close)="back()"></app-editor>
+} @else {
+  <div class="wrap">
+    <h1>📄 OnlyOffice Test Client</h1>
+
+    @if (message()) { <div class="msg ok">{{ message() }}</div> }
+    @if (error()) { <div class="msg err">{{ error() }}</div> }
+
+    <div class="upload">
+      <label>Upload document
+        <input type="file" (change)="upload($event)"
+               accept=".docx,.xlsx,.pptx,.doc,.xls,.ppt,.odt,.ods,.odp,.txt,.csv,.pdf"/>
+      </label>
+      <button (click)="refresh()">Refresh</button>
+    </div>
+
+    <ul>
+      @for (f of files(); track f) {
+        <li>
+          <span>{{ f }}</span>
+          <span class="actions">
+            <button (click)="edit(f)">Edit</button>
+            <button class="secondary" (click)="view(f)">View</button>
+          </span>
+        </li>
+      } @empty {
+        <li class="empty">No documents yet. Upload one above.</li>
+      }
+    </ul>
+  </div>
+}

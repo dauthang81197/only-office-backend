@@ -1,0 +1,13 @@
+.wrap { max-width: 760px; margin: 40px auto; padding: 0 16px; font-family: system-ui, sans-serif; }
+h1 { font-size: 1.5rem; }
+.msg { padding: 8px 12px; border-radius: 6px; margin: 12px 0; }
+.msg.ok { background: #e6f4ea; color: #1e7e34; }
+.msg.err { background: #fdecea; color: #c0392b; }
+.upload { display: flex; gap: 12px; align-items: center; padding: 16px; border: 1px dashed #ccc; border-radius: 8px; margin: 20px 0; }
+.upload label { display: flex; flex-direction: column; gap: 6px; font-size: .9rem; }
+ul { list-style: none; padding: 0; }
+li { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 8px; }
+li.empty { color: #888; justify-content: center; }
+.actions { display: flex; gap: 8px; }
+button { cursor: pointer; padding: 5px 12px; border-radius: 5px; border: 0; background: #2b7de9; color: #fff; font-size: .85rem; }
+button.secondary { background: #6c757d; }
